@@ -35,7 +35,7 @@ func (redis *Redis) LoadZones() {
 
 	conn := redis.Pool.Get()
 	if conn == nil {
-		fmt.Println("error connecting to redis")
+		fmt.Println("error connecting to redis!")
 		return
 	}
 	defer conn.Close()
@@ -43,7 +43,7 @@ func (redis *Redis) LoadZones() {
 
 	reply, err = conn.Do("KEYS", redis.keyPrefix + "*" + redis.keySuffix)
 	if err != nil {
-		fmt.Println("KEYS query failed")
+		fmt.Println("KEYS query failed: %s",err)
 		return
 	}
 	zones, err = redisCon.Strings(reply, nil)
