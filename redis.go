@@ -39,15 +39,19 @@ func (redis *Redis) LoadZones() {
 		return
 	}
 	defer conn.Close()
+	fmt.Println("Connected to redis")
 
 	reply, err = conn.Do("KEYS", redis.keyPrefix + "*" + redis.keySuffix)
 	if err != nil {
+		fmt.Println("KEYS query failed")
 		return
 	}
 	zones, err = redisCon.Strings(reply, nil)
 	for i, _ := range zones {
+		fmt.Println("Parsing zone: %s",zones[i])
 		zones[i] = strings.TrimPrefix(zones[i], redis.keyPrefix)
 		zones[i] = strings.TrimSuffix(zones[i], redis.keySuffix)
+		fmt.Println("Parsed zone: %s",zones[i])
 	}
 	redis.LastZoneUpdate = time.Now()
 	redis.Zones = zones
